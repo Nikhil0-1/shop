@@ -27,6 +27,13 @@ import {
     orderByChild,
     equalTo
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import {
+    getStorage,
+    ref as storageRef,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
 // ============================================
 // 🔥 FIREBASE CONFIGURATION (Your Project)
@@ -45,13 +52,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 // ============================================
 // ADMIN CONFIGURATION
 // ============================================
 // Set your admin email here
-const ADMIN_EMAIL = "admin@electroshop.com";
+const ADMIN_EMAIL = "shop@gmail.com";
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -152,6 +160,7 @@ export {
     app,
     auth,
     database,
+    storage,
     googleProvider,
 
     // Firebase Auth functions
@@ -172,6 +181,12 @@ export {
     query,
     orderByChild,
     equalTo,
+
+    // Firebase Storage functions
+    storageRef,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject,
 
     // Utility functions
     showLoader,

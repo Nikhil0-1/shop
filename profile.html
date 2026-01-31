@@ -300,7 +300,7 @@
     </nav>
 
     <script type="module">
-        import { auth, database, storage, ref, get, set, onAuthStateChanged, showToast, showLoader, hideLoader } from './js/firebase.js';
+        import { auth, database, storage, ref, get, set, onAuthStateChanged, showToast, showLoader, hideLoader, storageRef, uploadBytes, getDownloadURL } from './js/firebase.js';
         import { initAuthListener, updateCartCount } from './js/auth.js';
         import { initMenu } from './js/menu.js';
 
@@ -435,26 +435,25 @@
             showLoader();
 
             try {
-                // For now, use base64 encoding (Firebase Storage requires additional setup)
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const base64Image = event.target.result;
+                const fileName = `avatars/${user.uid}_${Date.now()}`;
+                const storageReference = storageRef(storage, fileName);
 
-                    // Update profile avatar display
-                    const avatar = document.getElementById('profileAvatar');
-                    avatar.innerHTML = `<img src="${base64Image}" alt="Profile">`;
+                const snapshot = await uploadBytes(storageReference, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
 
-                    // Save to database
-                    const userRef = ref(database, `users/${user.uid}/profileImage`);
-                    await set(userRef, base64Image);
+                // Update profile avatar display
+                const avatar = document.getElementById('profileAvatar');
+                avatar.innerHTML = `<img src="${downloadURL}" alt="Profile">`;
 
-                    showToast('Profile photo updated!', 'success');
-                    hideLoader();
-                };
-                reader.readAsDataURL(file);
+                // Save to database
+                const userRef = ref(database, `users/${user.uid}/profileImage`);
+                await set(userRef, downloadURL);
+
+                showToast('Profile photo updated!', 'success');
             } catch (error) {
                 console.error('Error uploading avatar:', error);
-                showToast('Error uploading photo', 'error');
+                showToast('Error uploading photo: ' + error.message, 'error');
+            } finally {
                 hideLoader();
             }
         }

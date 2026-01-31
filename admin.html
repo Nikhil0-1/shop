@@ -268,19 +268,90 @@
             color: var(--black);
         }
 
-        /* No Products */
-        .admin-page-wrapper .no-products {
-            color: rgba(255, 255, 255, 0.5);
+        /* Image Upload Box */
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .admin-page-wrapper .no-products h3 {
+        .upload-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .upload-box:hover {
+            border-color: var(--gold);
+            background: rgba(255, 184, 0, 0.05);
+            color: var(--gold);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .image-preview.show {
+            display: block !important;
+        }
+
+        .enquiry-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .enquiry-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .enquiry-sender {
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .enquiry-date {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .enquiry-subject {
+            font-weight: 500;
             color: var(--white);
+            margin-bottom: 8px;
         }
 
-        /* Toast */
-        .admin-page-wrapper .toast {
-            background: var(--white);
-            color: var(--black);
+        .enquiry-message {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .enquiry-contact {
+            display: flex;
+            gap: 16px;
+        }
+
+        .enquiry-contact-item {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         @media (min-width: 768px) {
@@ -293,6 +364,17 @@
             }
         }
     </style>
+    <script type="module">
+        // STRICT ADMIN REDIRECT - RUNS BEFORE PAGE RENDERS
+        import { auth, isAdmin } from './js/firebase.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user || !isAdmin(user)) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
 </head>
 
 <body class="admin-page-wrapper">
@@ -363,7 +445,7 @@
 
             <!-- Admin Tabs -->
             <div class="admin-tabs">
-                <button class="admin-tab" data-tab="dashboard">
+                <button class="admin-tab active" data-tab="dashboard">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect width="7" height="9" x="3" y="3" rx="1" />
@@ -373,7 +455,7 @@
                     </svg>
                     Overview
                 </button>
-                <button class="admin-tab active" data-tab="addProduct">
+                <button class="admin-tab" data-tab="addProduct">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14" />
@@ -410,7 +492,7 @@
             </div>
 
             <!-- Dashboard Panel -->
-            <div class="admin-panel" id="dashboard">
+            <div class="admin-panel active" id="dashboard">
                 <div class="admin-stats">
                     <div class="stat-card">
                         <div class="stat-icon">
@@ -444,13 +526,14 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
-                                <path
-                                    d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
-                                <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+                                <rect x="2" y="7" width="16" height="10" rx="2" ry="2" />
+                                <line x1="22" x2="22" y1="11" y2="13" />
+                                <line x1="6" x2="6" y1="11" y2="13" />
+                                <line x1="10" x2="10" y1="11" y2="13" />
                             </svg>
                         </div>
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Categories</div>
+                        <div class="stat-value" id="totalRevenue">₹0</div>
+                        <div class="stat-label">Revenue</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
@@ -511,7 +594,7 @@
             </div>
 
             <!-- Add/Edit Product Panel -->
-            <div class="admin-panel active" id="addProduct">
+            <div class="admin-panel" id="addProduct">
                 <div class="admin-form">
                     <h3 id="formTitle">Add New Product</h3>
                     <form id="productForm">
@@ -549,14 +632,23 @@
                                 rows="4"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="productImageURL">Image URL</label>
-                            <input type="url" id="productImageURL" placeholder="https://example.com/image.jpg">
-                            <small
-                                style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 6px; display: block;">
-                                Paste a direct image link (ends with .jpg, .png, .webp)
-                            </small>
+                            <label for="productImage">Product Image *</label>
+                            <div class="upload-container">
+                                <input type="file" id="productImage" accept="image/*" class="hidden">
+                                <label for="productImage" class="upload-box" id="uploadBox">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" x2="12" y1="3" y2="15" />
+                                    </svg>
+                                    <span>Click to upload image</span>
+                                </label>
+                                <input type="url" id="productImageURL" placeholder="Or paste image URL...">
+                            </div>
                             <img class="image-preview" id="imagePreview" alt="Preview"
-                                style="margin-top: 16px; max-width: 180px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                style="margin-top: 16px; max-width: 180px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: none;">
                         </div>
                         <div style="display: flex; gap: 12px; margin-top: 24px;">
                             <button type="submit" class="btn-primary" id="submitBtn" style="flex: 1;">
@@ -597,20 +689,7 @@
                     </button>
                 </div>
                 <div class="admin-products-list" id="adminProductsList">
-                    <div class="no-products">
-                        <span class="icon-xl icon-muted" style="margin-bottom: 16px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="m7.5 4.27 9 5.15" />
-                                <path
-                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                                <path d="m3.3 7 8.7 5 8.7-5" />
-                                <path d="M12 22V12" />
-                            </svg>
-                        </span>
-                        <h3>Loading products...</h3>
-                    </div>
+                    <!-- Products loaded via JS -->
                 </div>
             </div>
 
@@ -645,8 +724,7 @@
                     <h2 class="section-title">Customer Enquiries</h2>
                 </div>
                 <div class="enquiries-list" id="enquiriesContainer">
-                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">Loading enquiries...
-                    </div>
+                    <!-- Enquiries loaded via JS -->
                 </div>
             </div>
         </div>
@@ -654,7 +732,7 @@
 
     <!-- Admin Bottom Navigation (Mobile) -->
     <nav class="bottom-nav admin-bottom-nav">
-        <a href="#" class="bottom-nav-item" data-tab="dashboard">
+        <a href="#" class="bottom-nav-item active" data-tab="dashboard">
             <span class="icon-md">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -666,7 +744,7 @@
             </span>
             <span>Overview</span>
         </a>
-        <a href="#" class="bottom-nav-item active" data-tab="addProduct">
+        <a href="#" class="bottom-nav-item" data-tab="addProduct">
             <span class="icon-md">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -745,8 +823,9 @@
                 let revenue = 0;
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
+                        const order = child.val();
                         count++;
-                        revenue += child.val().total || 0;
+                        revenue += order.total || 0;
                     });
                 }
                 document.getElementById('totalOrders').textContent = count;

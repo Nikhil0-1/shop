@@ -121,7 +121,7 @@ textarea {
    ============================================ */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -1734,6 +1734,14 @@ textarea {
         font-size: 2.5rem;
     }
 
+    .hamburger-btn {
+        display: none;
+    }
+
+    .desktop-nav {
+        display: flex;
+    }
+
     .mobile-search {
         display: none;
     }
@@ -1743,7 +1751,7 @@ textarea {
     }
 
     .categories-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 16px;
     }
 
@@ -1786,7 +1794,11 @@ textarea {
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
     .hero-title {
-        font-size: 2.8rem;
+        font-size: 3rem;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(6, 1fr);
     }
 
     .products-grid {
@@ -1795,6 +1807,13 @@ textarea {
 
     .product-image {
         height: 200px;
+    }
+}
+
+/* Wide Desktop (1440px+) */
+@media (min-width: 1440px) {
+    .products-grid {
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 

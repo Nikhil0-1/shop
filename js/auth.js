@@ -41,6 +41,21 @@ function initAuthListener() {
         updateAuthUI(user);
         updateCartCount();
 
+        // Check if on admin.html and user is not admin
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'admin.html') {
+            if (user === null) {
+                // Not logged in
+                window.location.href = 'login.html';
+                return;
+            } else if (!isAdmin(user)) {
+                // Logged in but not admin
+                showToast('Access Denied: Admin only', 'error');
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+
         // Update slide menu auth state
         try {
             const { updateMenuAuth } = await import('./menu.js');
@@ -61,6 +76,9 @@ function initAuthListener() {
                     role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
                     createdAt: Date.now()
                 });
+            } else if (user.email === ADMIN_EMAIL && snapshot.val().role !== 'admin') {
+                // Update specific user to admin if email matches but role is not admin
+                await update(userRef, { role: 'admin' });
             }
         } else {
             // Clear cart from localStorage on logout
@@ -194,13 +212,18 @@ async function signUp(email, password) {
 async function login(email, password) {
     try {
         showLoader();
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
         hideLoader();
         showToast('Logged in successfully!', 'success');
 
-        // Redirect to home page
+        // Redirect based on role
         setTimeout(() => {
-            window.location.href = 'index.html';
+            if (isAdmin(user)) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         }, 1000);
 
     } catch (error) {
@@ -246,9 +269,13 @@ async function loginWithGoogle() {
         hideLoader();
         showToast('Logged in with Google!', 'success');
 
-        // Redirect to home page
+        // Redirect based on role
         setTimeout(() => {
-            window.location.href = 'index.html';
+            if (isAdmin(user)) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         }, 1000);
 
     } catch (error) {
