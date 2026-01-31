@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Panel - ElectroShop">
+    <title>Admin Panel - ElectroShop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Admin Panel - Black Theme Override */
+        .admin-page-wrapper {
+            background: var(--black);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .admin-page-wrapper .header {
+            background: var(--black);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .logo-text {
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .header-btn {
+            color: var(--white);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .admin-page-wrapper .header-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .admin-page-wrapper .main-content {
+            padding-top: calc(var(--header-height) + 24px);
+        }
+
+        .admin-page-wrapper .admin-header h1 {
+            color: var(--white);
+        }
+
+        .admin-badge {
+            background: var(--gold);
+            color: var(--black);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Admin Stats */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 24px 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold);
+        }
+
+        .stat-card .stat-icon {
+            margin-bottom: 12px;
+            color: var(--gold);
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Admin Tabs */
+        .admin-page-wrapper .admin-tabs {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px;
+            border-radius: var(--radius);
+            display: inline-flex;
+            margin-bottom: 28px;
+        }
+
+        .admin-page-wrapper .admin-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-page-wrapper .admin-tab.active,
+        .admin-page-wrapper .admin-tab:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* Admin Form */
+        .admin-page-wrapper .admin-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .admin-form h3 {
+            color: var(--white);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .form-group label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .admin-page-wrapper .form-group input,
+        .admin-page-wrapper .form-group select,
+        .admin-page-wrapper .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .form-group input:focus,
+        .admin-page-wrapper .form-group select:focus,
+        .admin-page-wrapper .form-group textarea:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
+        }
+
+        .admin-page-wrapper .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-page-wrapper .form-group select option {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Admin Products List */
+        .admin-page-wrapper .section-title {
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .admin-product-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .admin-product-item:hover {
+            border-color: var(--gold);
+        }
+
+        .admin-page-wrapper .admin-product-image {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-page-wrapper .admin-product-info h4 {
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .admin-product-info p {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .admin-page-wrapper .admin-action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        /* Orders Table */
+        .admin-page-wrapper .orders-table {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .orders-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .admin-page-wrapper .orders-table td {
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .orders-table tr {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Bottom Nav */
+        .admin-page-wrapper .bottom-nav {
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .bottom-nav-item {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .admin-page-wrapper .bottom-nav-item.active,
+        .admin-page-wrapper .bottom-nav-item:hover {
+            color: var(--gold);
+        }
+
+        /* User Dropdown */
+        .admin-page-wrapper .user-dropdown {
+            background: var(--black);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-page-wrapper .user-dropdown a,
+        .admin-page-wrapper .user-dropdown button {
+            color: var(--white);
+        }
+
+        .admin-page-wrapper .user-dropdown a:hover,
+        .admin-page-wrapper .user-dropdown button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gold);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action-btn {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* No Products */
+        .admin-page-wrapper .no-products {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .admin-page-wrapper .no-products h3 {
+            color: var(--white);
+        }
+
+        /* Toast */
+        .admin-page-wrapper .toast {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        @media (min-width: 768px) {
+            .admin-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .bottom-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-page-wrapper">
+    <div class="loader-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    <div class="toast-container"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon icon-lg icon-gold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+                    </svg>
+                </span>
+                <span class="logo-text">Electro<span>Shop</span></span>
+            </a>
+            <span class="admin-badge">ADMIN</span>
+            <div class="header-actions">
+                <a href="index.html" class="header-btn" title="View Store">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                        <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                        <path d="M2 7h20" />
+                        <path
+                            d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
+                    </svg>
+                </a>
+                <div class="user-menu" id="userMenu">
+                    <button class="header-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </button>
+                    <div class="user-dropdown">
+                        <span style="padding: 12px 16px; color: rgba(255,255,255,0.5); font-size: 0.8rem;"
+                            id="userEmail">Admin</span>
+                        <button id="logoutBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" x2="9" y1="12" y2="12" />
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container admin-page">
+            <div class="admin-header">
+                <h1>Dashboard</h1>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab" data-tab="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="7" height="9" x="3" y="3" rx="1" />
+                        <rect width="7" height="5" x="14" y="3" rx="1" />
+                        <rect width="7" height="9" x="14" y="12" rx="1" />
+                        <rect width="7" height="5" x="3" y="16" rx="1" />
+                    </svg>
+                    Overview
+                </button>
+                <button class="admin-tab active" data-tab="addProduct">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+                    Add
+                </button>
+                <button class="admin-tab" data-tab="productsList">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m7.5 4.27 9 5.15" />
+                        <path
+                            d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                        <path d="m3.3 7 8.7 5 8.7-5" />
+                        <path d="M12 22V12" />
+                    </svg>
+                    Products
+                </button>
+                <button class="admin-tab" data-tab="ordersList">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    </svg>
+                    Orders
+                </button>
+                <button class="admin-tab" data-tab="enquiriesList">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Enquiries
+                </button>
+            </div>
+
+            <!-- Dashboard Panel -->
+            <div class="admin-panel" id="dashboard">
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m7.5 4.27 9 5.15" />
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                                <path d="m3.3 7 8.7 5 8.7-5" />
+                                <path d="M12 22V12" />
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="totalProducts">0</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                                <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="totalEnquiries">0</div>
+                        <div class="stat-label">Enquiries</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--white); font-size: 1rem; margin-bottom: 16px;">Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="document.querySelector('[data-tab=addProduct]').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="M12 5v14" />
+                        </svg>
+                        Add Product
+                    </button>
+                    <button class="quick-action-btn"
+                        onclick="document.querySelector('[data-tab=productsList]').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m7.5 4.27 9 5.15" />
+                            <path
+                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                            <path d="m3.3 7 8.7 5 8.7-5" />
+                            <path d="M12 22V12" />
+                        </svg>
+                        Products
+                    </button>
+                    <button class="quick-action-btn" onclick="document.querySelector('[data-tab=ordersList]').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                        </svg>
+                        Orders
+                    </button>
+                    <a href="index.html" class="quick-action-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                            <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                            <path d="M2 7h20" />
+                            <path
+                                d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
+                        </svg>
+                        View Store
+                    </a>
+                </div>
+            </div>
+
+            <!-- Add/Edit Product Panel -->
+            <div class="admin-panel active" id="addProduct">
+                <div class="admin-form">
+                    <h3 id="formTitle">Add New Product</h3>
+                    <form id="productForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productName">Product Name *</label>
+                                <input type="text" id="productName" placeholder="e.g. Arduino Uno R3" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productCategory">Category *</label>
+                                <select id="productCategory" required>
+                                    <option value="">Select category</option>
+                                    <option value="arduino">Arduino</option>
+                                    <option value="sensors">Sensors</option>
+                                    <option value="ics">ICs</option>
+                                    <option value="modules">Modules</option>
+                                    <option value="power">Power</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productPrice">Price (₹) *</label>
+                                <input type="number" id="productPrice" placeholder="e.g. 599" min="0" step="0.01"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productStock">Stock Quantity *</label>
+                                <input type="number" id="productStock" placeholder="e.g. 50" min="0" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea id="productDescription" placeholder="Enter product description..."
+                                rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImageURL">Image URL</label>
+                            <input type="url" id="productImageURL" placeholder="https://example.com/image.jpg">
+                            <small
+                                style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 6px; display: block;">
+                                Paste a direct image link (ends with .jpg, .png, .webp)
+                            </small>
+                            <img class="image-preview" id="imagePreview" alt="Preview"
+                                style="margin-top: 16px; max-width: 180px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-top: 24px;">
+                            <button type="submit" class="btn-primary" id="submitBtn" style="flex: 1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M5 12h14" />
+                                    <path d="M12 5v14" />
+                                </svg>
+                                Add Product
+                            </button>
+                            <button type="button" class="btn-secondary hidden" id="cancelEditBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M18 6 6 18" />
+                                    <path d="m6 6 12 12" />
+                                </svg>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Products List Panel -->
+            <div class="admin-panel" id="productsList">
+                <div class="section-header">
+                    <h2 class="section-title">All Products</h2>
+                    <button class="btn-primary" onclick="document.querySelector('[data-tab=addProduct]').click()"
+                        style="padding: 10px 16px; font-size: 0.8rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="M12 5v14" />
+                        </svg>
+                        Add New
+                    </button>
+                </div>
+                <div class="admin-products-list" id="adminProductsList">
+                    <div class="no-products">
+                        <span class="icon-xl icon-muted" style="margin-bottom: 16px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m7.5 4.27 9 5.15" />
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                                <path d="m3.3 7 8.7 5 8.7-5" />
+                                <path d="M12 22V12" />
+                            </svg>
+                        </span>
+                        <h3>Loading products...</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Panel -->
+            <div class="admin-panel" id="ordersList">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Orders</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 40px;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Enquiries Panel -->
+            <div class="admin-panel" id="enquiriesList">
+                <div class="section-header">
+                    <h2 class="section-title">Customer Enquiries</h2>
+                </div>
+                <div class="enquiries-list" id="enquiriesContainer">
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">Loading enquiries...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Admin Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav admin-bottom-nav">
+        <a href="#" class="bottom-nav-item" data-tab="dashboard">
+            <span class="icon-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+            </span>
+            <span>Overview</span>
+        </a>
+        <a href="#" class="bottom-nav-item active" data-tab="addProduct">
+            <span class="icon-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                </svg>
+            </span>
+            <span>Add</span>
+        </a>
+        <a href="#" class="bottom-nav-item" data-tab="productsList">
+            <span class="icon-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m7.5 4.27 9 5.15" />
+                    <path
+                        d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                    <path d="m3.3 7 8.7 5 8.7-5" />
+                    <path d="M12 22V12" />
+                </svg>
+            </span>
+            <span>Products</span>
+            <span class="nav-badge" id="productCountBadge" style="display: none;">0</span>
+        </a>
+        <a href="#" class="bottom-nav-item" data-tab="ordersList">
+            <span class="icon-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                </svg>
+            </span>
+            <span>Orders</span>
+            <span class="nav-badge" id="orderCountBadge" style="display: none;">0</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item">
+            <span class="icon-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                    <path d="M2 7h20" />
+                    <path
+                        d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
+                </svg>
+            </span>
+            <span>Store</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initAuthListener, logout } from './js/auth.js';
+        import { initAdminPage } from './js/admin.js';
+        import { database, ref, onValue, formatPrice } from './js/firebase.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuthListener();
+            initAdminPage();
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+            // Update dashboard stats
+            const productsRef = ref(database, 'products');
+            onValue(productsRef, (snapshot) => {
+                let count = 0;
+                if (snapshot.exists()) {
+                    snapshot.forEach(() => count++);
+                }
+                document.getElementById('totalProducts').textContent = count;
+            });
+
+            const ordersRef = ref(database, 'orders');
+            onValue(ordersRef, (snapshot) => {
+                let count = 0;
+                let revenue = 0;
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        count++;
+                        revenue += child.val().total || 0;
+                    });
+                }
+                document.getElementById('totalOrders').textContent = count;
+                document.getElementById('totalRevenue').textContent = formatPrice(revenue);
+            });
+        });
+    </script>
+</body>
+
+</html>
