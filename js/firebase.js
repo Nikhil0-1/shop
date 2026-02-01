@@ -141,7 +141,7 @@ function formatPrice(price) {
  * @returns {boolean}
  */
 function isAdmin(user) {
-    return user && user.email === ADMIN_EMAIL;
+    return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 }
 
 /**

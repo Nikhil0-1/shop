@@ -74,10 +74,10 @@ function initAuthListener() {
                 // Create new user entry
                 await set(userRef, {
                     email: user.email,
-                    role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+                    role: isAdmin(user) ? 'admin' : 'user',
                     createdAt: Date.now()
                 });
-            } else if (user.email === ADMIN_EMAIL && snapshot.val().role !== 'admin') {
+            } else if (isAdmin(user) && snapshot.val().role !== 'admin') {
                 // Update specific user to admin if email matches but role is not admin
                 await update(userRef, { role: 'admin' });
             }
@@ -176,7 +176,7 @@ async function signUp(email, password) {
         // Create user in database
         await set(ref(database, `users/${user.uid}`), {
             email: user.email,
-            role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+            role: isAdmin(user) ? 'admin' : 'user',
             createdAt: Date.now()
         });
 
@@ -271,7 +271,7 @@ async function loginWithGoogle() {
         if (!snapshot.exists()) {
             await set(userRef, {
                 email: user.email,
-                role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+                role: isAdmin(user) ? 'admin' : 'user',
                 createdAt: Date.now()
             });
         }
