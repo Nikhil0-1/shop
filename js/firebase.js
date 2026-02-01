@@ -59,7 +59,7 @@ const googleProvider = new GoogleAuthProvider();
 // ADMIN CONFIGURATION
 // ============================================
 // Set your admin email here
-const ADMIN_EMAIL = "shop@gmail.com";
+const ADMIN_EMAIL = "nikhil@munna.com";
 
 // ============================================
 // UTILITY FUNCTIONS

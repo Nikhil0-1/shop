@@ -41,15 +41,16 @@ function initAuthListener() {
         updateAuthUI(user);
         updateCartCount();
 
-        // Check if on admin.html and user is not admin
-        const currentPage = window.location.pathname.split('/').pop();
-        if (currentPage === 'admin.html') {
+        // Check if on protected pages
+        const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+
+        if (currentPage === 'admin.html' || currentPage === 'orders.html' || currentPage === 'profile.html') {
             if (user === null) {
                 // Not logged in
                 window.location.href = 'login.html';
                 return;
-            } else if (!isAdmin(user)) {
-                // Logged in but not admin
+            } else if (currentPage === 'admin.html' && !isAdmin(user)) {
+                // Logged in but not admin trying to access admin panel
                 showToast('Access Denied: Admin only', 'error');
                 window.location.href = 'index.html';
                 return;
@@ -230,7 +231,7 @@ async function login(email, password) {
         hideLoader();
         console.error('Login error:', error);
 
-        let errorMessage = 'Login failed. Please try again.';
+        let errorMessage = `Login failed: ${error.message}`;
         if (error.code === 'auth/user-not-found') {
             errorMessage = 'No account found with this email.';
         } else if (error.code === 'auth/wrong-password') {
@@ -239,6 +240,8 @@ async function login(email, password) {
             errorMessage = 'Invalid email address.';
         } else if (error.code === 'auth/invalid-credential') {
             errorMessage = 'Invalid email or password.';
+        } else if (error.code === 'auth/network-request-failed') {
+            errorMessage = 'Network error. Check your connection.';
         }
 
         showToast(errorMessage, 'error');
@@ -249,6 +252,13 @@ async function login(email, password) {
  * Login with Google
  */
 async function loginWithGoogle() {
+    // Check if running on file:// protocol
+    if (window.location.protocol === 'file:') {
+        showToast('Google login is not available when opening files directly. Please use a local server or host the site.', 'warning');
+        console.warn('Firebase Auth Google Auth requires a web protocol (http/https).');
+        return;
+    }
+
     try {
         showLoader();
         const result = await signInWithPopup(auth, googleProvider);

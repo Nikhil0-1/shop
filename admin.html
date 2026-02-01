@@ -370,8 +370,12 @@
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
         onAuthStateChanged(auth, (user) => {
-            if (!user || !isAdmin(user)) {
+            if (user === null) {
+                // Not logged in at all
                 window.location.href = 'login.html';
+            } else if (!isAdmin(user)) {
+                // Logged in but not the admin
+                window.location.href = 'index.html';
             }
         });
     </script>
