@@ -42,21 +42,17 @@ function initAuthListener() {
         updateAuthUI(user);
         updateCartCount();
 
-        // Check if on protected pages
+        // Check if on protected pages (orders, profile only - admin has its own guard)
         const currentPage = window.location.pathname.split('/').pop().toLowerCase();
 
-        if (currentPage === 'admin.html' || currentPage === 'orders.html' || currentPage === 'profile.html') {
+        if (currentPage === 'orders.html' || currentPage === 'profile.html') {
             if (user === null) {
                 // Not logged in
                 window.location.href = 'login.html';
                 return;
-            } else if (currentPage === 'admin.html' && !isAdmin(user)) {
-                // Logged in but not admin trying to access admin panel
-                showToast('Access Denied: Admin only', 'error');
-                window.location.href = 'index.html';
-                return;
             }
         }
+        // NOTE: admin.html has its own auth guard in <head> - do not duplicate here
 
         // Update slide menu auth state
         try {

@@ -58,8 +58,9 @@ const googleProvider = new GoogleAuthProvider();
 // ============================================
 // ADMIN CONFIGURATION
 // ============================================
-// Set your admin email here
-const ADMIN_EMAIL = "nikhil@munna.com";
+// Admin UID (Firebase Authentication se milta hai)
+const ADMIN_UID = "PkNYMPmqAUSdyJao6HL8ZDWdHuu1";
+const ADMIN_EMAIL = "nikhil@munna.com"; // backward compat ke liye rakha hai
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -141,7 +142,15 @@ function formatPrice(price) {
  * @returns {boolean}
  */
 function isAdmin(user) {
-    return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    if (!user) return false;
+    // Debug: Browser console me dekho
+    console.log('[Admin Check] UID:', user.uid, '| Email:', user.email);
+    console.log('[Admin Check] Expected UID:', ADMIN_UID);
+    // UID ya Email dono se check karo (fallback)
+    const byUID = user.uid === ADMIN_UID;
+    const byEmail = user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    console.log('[Admin Check] byUID:', byUID, '| byEmail:', byEmail);
+    return byUID || byEmail;
 }
 
 /**
@@ -197,5 +206,6 @@ export {
     getTimestamp,
 
     // Config
-    ADMIN_EMAIL
+    ADMIN_EMAIL,
+    ADMIN_UID
 };

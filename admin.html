@@ -364,18 +364,52 @@
             }
         }
     </style>
+    <style>
+        /* Auth check overlay - blocks page flash until Firebase confirms admin */
+        #authCheckOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #authCheckOverlay .auth-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,184,0,0.2);
+            border-top-color: #FFB800;
+            border-radius: 50%;
+            animation: authSpin 0.8s linear infinite;
+        }
+        @keyframes authSpin { to { transform: rotate(360deg); } }
+    </style>
     <script type="module">
-        // STRICT ADMIN REDIRECT - RUNS BEFORE PAGE RENDERS
+        // STRICT ADMIN GUARD - blocks page until Firebase confirms identity
         import { auth, isAdmin } from './js/firebase.js';
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-        onAuthStateChanged(auth, (user) => {
+        // Immediately show auth overlay (blocks the page from rendering)
+        const overlay = document.createElement('div');
+        overlay.id = 'authCheckOverlay';
+        overlay.innerHTML = '<div class="auth-spinner"></div>';
+        document.documentElement.appendChild(overlay);
+
+        // Wait for Firebase to resolve auth state
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe(); // Only run once
+
             if (user === null) {
-                // Not logged in at all
-                window.location.href = 'login.html';
+                // Not logged in - go to login
+                window.location.replace('login.html');
             } else if (!isAdmin(user)) {
-                // Logged in but not the admin
-                window.location.href = 'index.html';
+                // Logged in but NOT admin - go to index
+                window.location.replace('index.html');
+            } else {
+                // ✅ Confirmed admin - remove overlay and show page
+                const el = document.getElementById('authCheckOverlay');
+                if (el) el.remove();
             }
         });
     </script>

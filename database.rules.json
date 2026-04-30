@@ -3,23 +3,23 @@
     "users": {
       ".read": "auth != null",
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+        ".read": "auth != null && (auth.uid === $uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')",
+        ".write": "auth != null && (auth.uid === $uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')"
       }
     },
     "products": {
       ".read": true,
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      ".write": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'"
     },
     "orders": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".read": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'",
       "$orderId": {
-        ".read": "auth != null && (data.child('uid').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth != null && (!data.exists() || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+        ".read": "auth != null && (data.child('uid').val() === auth.uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')",
+        ".write": "auth != null && (!data.exists() || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')"
       }
     },
     "enquiries": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".read": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'",
       ".write": true
     }
   }
