@@ -386,28 +386,63 @@
         @keyframes authSpin { to { transform: rotate(360deg); } }
     </style>
     <script type="module">
-        // STRICT ADMIN GUARD - blocks page until Firebase confirms identity
-        import { auth, isAdmin } from './js/firebase.js';
-        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        // =====================================================
+        // ADMIN AUTH GUARD - Self-contained, robust version
+        // =====================================================
+        import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-        // Immediately show auth overlay (blocks the page from rendering)
+        // Admin credentials - hardcoded for max reliability
+        const ADMIN_UID   = 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1';
+        const ADMIN_EMAIL = 'nikhil@munna.com';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8U-rknJZEvGGvfIpmQ2fL-zMtPK6UM4Y",
+            authDomain: "shop-4fcbd.firebaseapp.com",
+            databaseURL: "https://shop-4fcbd-default-rtdb.firebaseio.com",
+            projectId: "shop-4fcbd",
+            storageBucket: "shop-4fcbd.firebasestorage.app",
+            messagingSenderId: "206450876343",
+            appId: "1:206450876343:web:29d097c5b797e9397bd232"
+        };
+
+        // Reuse existing app or create new one
+        const app  = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Black overlay - blocks page content until admin is confirmed
         const overlay = document.createElement('div');
         overlay.id = 'authCheckOverlay';
         overlay.innerHTML = '<div class="auth-spinner"></div>';
         document.documentElement.appendChild(overlay);
 
-        // Wait for Firebase to resolve auth state
+        // Firebase resolves auth state (checks persisted session)
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            unsubscribe(); // Only run once
+            unsubscribe(); // Run only once
 
-            if (user === null) {
-                // Not logged in - go to login
+            console.log('=== ADMIN GUARD CHECK ===');
+
+            if (!user) {
+                console.log('❌ Not logged in → login.html');
                 window.location.replace('login.html');
-            } else if (!isAdmin(user)) {
-                // Logged in but NOT admin - go to index
+                return;
+            }
+
+            console.log('User UID  :', user.uid);
+            console.log('User Email:', user.email);
+            console.log('Admin UID :', ADMIN_UID);
+
+            const isAdminByUID   = user.uid === ADMIN_UID;
+            const isAdminByEmail = user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+            console.log('UID match  :', isAdminByUID);
+            console.log('Email match:', isAdminByEmail);
+
+            if (!isAdminByUID && !isAdminByEmail) {
+                console.log('❌ Not admin → index.html');
                 window.location.replace('index.html');
             } else {
-                // ✅ Confirmed admin - remove overlay and show page
+                console.log('✅ Admin confirmed → showing panel');
                 const el = document.getElementById('authCheckOverlay');
                 if (el) el.remove();
             }
