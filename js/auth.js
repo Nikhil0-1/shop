@@ -15,6 +15,7 @@ import {
     ref,
     set,
     get,
+    update,
     showLoader,
     hideLoader,
     showToast,

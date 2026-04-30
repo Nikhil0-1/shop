@@ -2293,10 +2293,65 @@ textarea {
     color: var(--text-muted);
 }
 
-.order-item-price {
-    font-size: 0.9rem;
+.order-status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
     font-weight: 600;
+    text-transform: uppercase;
+}
+
+.order-status-badge.pending {
+    background: var(--gold-subtle);
+    color: var(--gold-dark);
+}
+
+.order-status-badge.completed {
+    background: var(--light-gray);
+    color: var(--dark-gray);
+}
+
+.order-status-badge.processing {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.order-footer {
+    padding: 16px;
+    background: var(--off-white);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.order-total {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.order-total span {
     color: var(--gold);
+    font-size: 1.1rem;
+    margin-left: 8px;
+}
+
+.orders-empty {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--text-muted);
+}
+
+.orders-empty svg {
+    margin-bottom: 16px;
+    color: var(--gray);
+}
+
+.orders-empty h3 {
+    font-size: 1.1rem;
+    color: var(--black);
+    margin-bottom: 8px;
+}
 }
 
 .order-footer {

@@ -531,7 +531,25 @@ async function initHomePage() {
 
     renderFeaturedProducts();
     updateCategoryCounts();
-    renderProducts(allProducts);
+    
+    // Handle category from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    
+    if (categoryParam) {
+        currentCategory = categoryParam;
+        // Update filter buttons UI
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.dataset.category === categoryParam) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        applyFilters();
+    } else {
+        renderProducts(allProducts);
+    }
 
     initSearch();
     initCategoryFilters();
