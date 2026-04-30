@@ -3,23 +3,23 @@
     "users": {
       ".read": "auth != null",
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03')",
-        ".write": "auth != null && (auth.uid === $uid || auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03')"
+        ".read": "auth != null && (auth.uid === $uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')",
+        ".write": "auth != null && (auth.uid === $uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')"
       }
     },
     "products": {
       ".read": true,
-      ".write": "auth != null && auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03'"
+      ".write": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'"
     },
     "orders": {
-      ".read": "auth != null && auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03'",
+      ".read": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'",
       "$orderId": {
-        ".read": "auth != null && (data.child('uid').val() === auth.uid || auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03')",
-        ".write": "auth != null && (!data.exists() || auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03')"
+        ".read": "auth != null && (data.child('uid').val() === auth.uid || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')",
+        ".write": "auth != null && (!data.exists() || auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1')"
       }
     },
     "enquiries": {
-      ".read": "auth != null && auth.uid === '4P0fVLLY85ebqC5DDKqIgA6iLO03'",
+      ".read": "auth != null && auth.uid === 'PkNYMPmqAUSdyJao6HL8ZDWdHuu1'",
       ".write": true
     }
   }

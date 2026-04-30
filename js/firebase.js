@@ -58,8 +58,8 @@ const googleProvider = new GoogleAuthProvider();
 // ============================================
 // ADMIN CONFIGURATION
 // ============================================
-const ADMIN_UID   = "4P0fVLLY85ebqC5DDKqIgA6iLO03";
-const ADMIN_EMAIL = "goluks0021@gmail.com";
+const ADMIN_UID   = "PkNYMPmqAUSdyJao6HL8ZDWdHuu1";
+const ADMIN_EMAIL = "admin@component.com";
 
 // ============================================
 // UTILITY FUNCTIONS
