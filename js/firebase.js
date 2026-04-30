@@ -58,9 +58,8 @@ const googleProvider = new GoogleAuthProvider();
 // ============================================
 // ADMIN CONFIGURATION
 // ============================================
-// Admin UID (Firebase Authentication se milta hai)
-const ADMIN_UID = "PkNYMPmqAUSdyJao6HL8ZDWdHuu1";
-const ADMIN_EMAIL = "nikhil@munna.com"; // backward compat ke liye rakha hai
+const ADMIN_UID   = "4P0fVLLY85ebqC5DDKqIgA6iLO03";
+const ADMIN_EMAIL = "goluks0021@gmail.com";
 
 // ============================================
 // UTILITY FUNCTIONS
